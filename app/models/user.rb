@@ -38,8 +38,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email
   validate :username_validator
   validate :email_validator, if: :email_changed?
-  validate :password_validator
-
+  
   before_save :cook
   before_save :update_username_lower
   before_save :ensure_password_is_hashed

@@ -46,6 +46,12 @@ class SessionController < ApplicationController
     render json: {error: I18n.t("login.incorrect_username_email_or_password")}
   end
 
+  def auto_auth
+    @user = User.find_by_nthwire_token(params[:auth_token])
+    log_on_user(@user)
+    redirect_to root_path
+  end
+
   def forgot_password
     requires_parameter(:login)
 

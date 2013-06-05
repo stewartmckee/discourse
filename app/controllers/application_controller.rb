@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from Exception do |exception|
     unless [ ActiveRecord::RecordNotFound, ActionController::RoutingError,
-             ActionController::UnknownController, AbstractController::ActionNotFound].include? exception.class
+             ActionController::UnknownController, AbstractController::ActionNotFound, DiscourseError].include? exception.class
       begin
         ErrorLog.report_async!(exception, self, request, current_user)
       rescue
@@ -62,6 +62,7 @@ class ApplicationController < ActionController::Base
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
     redirect_to root_path
+    return
   end
 
   rescue_from Discourse::NotFound do

@@ -3,15 +3,15 @@ require_dependency 'discourse_hub'
 class UsersController < ApplicationController
 
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :activate_account, :avatar, :authorize_email, :user_preferences_redirect]
-  skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_restricted_access, only: [:avatar]
+  skip_before_filter :authorize_mini_profiler, only: [:avatar, :create_via_api]
+  skip_before_filter :check_restricted_access, only: [:avatar, :create_via_api]
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the 
   #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
   #  once that happens you can't log in with social
-  skip_before_filter :verify_authenticity_token, only: [:create]
+  skip_before_filter :verify_authenticity_token, only: [:create, :create_via_api]
 
   def show
     @user = fetch_user_from_params
@@ -315,6 +315,21 @@ class UsersController < ApplicationController
       flash[:error] = I18n.t('activation.already_done')
     end
     render layout: 'no_js'
+  end
+
+  def create_via_api
+    puts params
+    username = User.suggest_username(params[:email])
+    puts username
+    @user = User.new(params.merge(:username => username))
+    if @user.save
+      @user.update_attribute(:nthwire_token, params[:auth_token])
+      @user.activate
+      render :text => "OK", :status => 200, :layout => nil
+    else
+      puts @users.errors
+      render :text => @user.errors, :status => 500, :layout => nil
+    end
   end
 
   def send_activation_email

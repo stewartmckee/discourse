@@ -1,0 +1,2 @@
+class DiscourseError < StandardError
+end

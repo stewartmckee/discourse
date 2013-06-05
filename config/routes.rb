@@ -31,7 +31,7 @@ Discourse::Application.routes.draw do
 
     resources :groups, constraints: AdminConstraint.new do
       collection do
-        post 'refresh_automatic_groups' => 'groups#refresh_automatic_groups'
+         post'refresh_automatic_groups' => 'groups#refresh_automatic_groups'
       end
       get 'users'
     end
@@ -53,6 +53,7 @@ Discourse::Application.routes.draw do
       put 'activate'
       put 'deactivate'
     end
+
 
     resources :impersonate, constraints: AdminConstraint.new
     resources :email_logs do
@@ -124,6 +125,10 @@ Discourse::Application.routes.draw do
   get 'users/:username/avatar(/:size)' => 'users#avatar', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/invited' => 'users#invited', constraints: {username: USERNAME_ROUTE_FORMAT}
   get 'users/:username/send_activation_email' => 'users#send_activation_email', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get 'api/create_via_api' => "users#create_via_api"
+  post 'api/create_via_api' => "users#create_via_api"
+  get '/api/:auth_token/login' => "session#auto_auth"
+
 
   resources :uploads
 
