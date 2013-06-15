@@ -374,6 +374,7 @@ GEM
       rspec-mocks (~> 2.13.0)
     ruby-hmac (0.4.0)
     ruby-openid (2.2.3)
+    rvm (1.11.3.7)
     sanitize (2.0.3)
       nokogiri (>= 1.4.4, < 1.6)
     sass (3.2.8)
@@ -504,6 +505,7 @@ DEPENDENCIES
   rest-client
   rinku
   rspec-rails
+  rvm
   sanitize
   sass
   sass-rails
