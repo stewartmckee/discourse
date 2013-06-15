@@ -1,0 +1,26 @@
+ server {
+
+    server_name forum.nthwire.com;
+    
+    root /home/webapps/discourse/public;
+    listen 80;
+    client_max_body_size 4G;
+    keepalive_timeout 5;
+
+    location / {
+      try_files $uri @app;
+    }
+
+    location @app {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+      # pass to the upstream unicorn server mentioned above 
+      proxy_pass http://unix:/home/webapps/discourse/tmp/sockets/unicorn.sock;
+    }
+
+    error_page 500 502 503 504 /500.html;
+    location = /500.html {
+      root /home/webapps/discourse/public;
+    }
+  }
