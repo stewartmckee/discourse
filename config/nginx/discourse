@@ -19,8 +19,8 @@
       proxy_pass http://unix:/home/webapps/discourse/tmp/sockets/unicorn.sock;
     }
 
-    error_page 500 502 503 504 /500.html;
-    location = /500.html {
-      root /home/webapps/discourse/public;
-    }
+    #error_page 500 502 503 504 /500.html;
+    #location = /500.html {
+    #  root /home/webapps/discourse/public;
+    #}
   }
