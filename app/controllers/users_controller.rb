@@ -318,10 +318,13 @@ class UsersController < ApplicationController
   end
 
   def create_via_api
-    puts params
-    username = User.suggest_username(params[:email])
-    puts username
-    @user = User.new(params.merge(:username => username))
+    if User.exists?(:email => params[:email])
+      @user = User.find_by_email(params[:email])
+    else
+      username = User.suggest_username(params[:email])
+      @user = User.new(params.merge(:username => username))
+    end
+
     if @user.save
       @user.update_attribute(:nthwire_token, params[:auth_token])
       @user.activate

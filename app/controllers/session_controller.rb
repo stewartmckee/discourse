@@ -48,8 +48,12 @@ class SessionController < ApplicationController
 
   def auto_auth
     @user = User.find_by_nthwire_token(params[:auth_token])
-    log_on_user(@user)
-    redirect_to root_path
+    if @user
+      log_on_user(@user)
+      redirect_to root_path
+    else
+      redirect_to :text => "Sorry, but there is a problem with your account, please contact support at support@nthwire.com", :status => 401
+    end
   end
 
   def forgot_password
