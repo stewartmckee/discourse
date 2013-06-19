@@ -52,7 +52,7 @@ class SessionController < ApplicationController
       log_on_user(@user)
       redirect_to root_path
     else
-      redirect_to :text => "Sorry, but there is a problem with your account, please contact support at support@nthwire.com", :status => 401
+      render :text => "Sorry, but there is a problem with your account, please contact support at support@nthwire.com", :status => 401
     end
   end
 
